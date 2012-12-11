@@ -1,18 +1,21 @@
+require 'open-uri'
+
 class WeatherController < ApplicationController
   respond_to :json
 
   def index
-    # For now, assume Austin, TX
-    w_api = Wunderground.new(ENV['WUNDERGROUND_API_KEY'])
-    data = w_api.conditions_for('TX', 'Austin')
-    @weather = Weather.new
-    @weather.current_temp_f = data['current_observation']['temp_f']
-    @weather.wind_speed = data['current_observation']['wind_mph']
-    @weather.id = "1"
-    puts @weather
+    @weathers = []
+
+    [ ['TX', 'Austin'],
+      ['CA', 'San Francisco'],
+      ['IL', 'Chicago'],
+      ['NY', 'New York City'] ].each do |value| 
+      @weathers << get_weather_for(*value)
+    end
+
     respond_to do |format|
       format.html # index.html.erb
-      format.json { render json: @weather }
+      format.json { render json: @weathers }
     end
   end
 
@@ -29,7 +32,6 @@ class WeatherController < ApplicationController
   end
 
   protected
-
     def setup_call
       @state = URI::encode(params[:state])
       @city = URI::encode(params[:city])
@@ -43,5 +45,32 @@ class WeatherController < ApplicationController
       else
         respond_with data[element]
       end
+    end
+
+    def get_weather_for(*args)
+      w_api = Wunderground.new(ENV['WUNDERGROUND_API_KEY'])
+      data = nil
+
+      weather = Weather.new
+      if args.length == 2
+        state, city = *args
+        data = w_api.conditions_for(URI::encode(state), URI::encode(city))
+        weather.state = state
+        weather.city = city
+      elsif args.length == 1
+        zipcode, = *args
+        data = w_api.conditions_for(zipcode)
+        weather.id = zipcode
+      end
+
+      if data != nil
+        observation = data['current_observation']
+        if observation != nil
+          weather.current_temp_f = observation['temp_f']
+          weather.wind_speed = observation['wind_mph']
+        end
+      end
+
+      weather
     end
 end
