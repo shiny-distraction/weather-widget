@@ -4,3 +4,12 @@
   </p>
   <div id="weathers"></div>
 </div>
+
+<script type="text/javascript">
+  $(function() {
+    app.weathers = new app.WeatherCollection();
+    app.weathers.reset(<%= @weathers.to_json.html_safe -%>);
+    new app.WeatherAppView();
+    Backbone.history.start();
+  });
+</script>

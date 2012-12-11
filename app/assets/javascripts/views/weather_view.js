@@ -15,7 +15,7 @@ $(function( $ ) {
 
         initialize: function() {
             this.model.on( 'change', this.render, this );
-            this.refreshWeather();
+            this.model.on( 'add', this.render, this );
         },
 
         render: function() {
