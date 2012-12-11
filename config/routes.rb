@@ -1,7 +1,7 @@
 WeatherWidget::Application.routes.draw do
-  match 'weather/forecast/:state/:city' => 'weather#forecast'
+  match 'weathers/forecast/:state/:city' => 'weather#forecast'
 
-  match 'weather/conditions/:state/:city' => 'weather#conditions'
+  match 'weathers/conditions/:state/:city' => 'weather#conditions'
 
-  match 'weather' => 'weather#index'
+  match 'weathers' => 'weather#index'
 end
