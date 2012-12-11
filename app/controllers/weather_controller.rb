@@ -20,6 +20,13 @@ class WeatherController < ApplicationController
     end
   end
 
+  def show
+    @weather = get_weather_for(params[:id])
+    respond_to do |format|
+      format.json { render json: @weather }
+    end
+  end
+
   def forecast
     w_api = setup_call
     data = w_api.forecast_for(@state, @city)
