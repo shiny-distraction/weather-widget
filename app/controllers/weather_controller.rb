@@ -1,4 +1,5 @@
 require 'open-uri'
+require 'area'
 
 class WeatherController < ApplicationController
   respond_to :json
@@ -9,7 +10,7 @@ class WeatherController < ApplicationController
     [ ['TX', 'Austin'],
       ['CA', 'San Francisco'],
       ['IL', 'Chicago'],
-      ['NY', 'New York City'] ].each do |value| 
+      ['NY', 'New York'] ].each do |value| 
       @weathers << get_weather_for(*value)
     end
 
@@ -57,10 +58,13 @@ class WeatherController < ApplicationController
         data = w_api.conditions_for(URI::encode(state), URI::encode(city))
         weather.state = state
         weather.city = city
+        weather.id = "#{city}, #{state}".to_zip.first
       elsif args.length == 1
         zipcode, = *args
         data = w_api.conditions_for(zipcode)
         weather.id = zipcode
+        weather.city = zipcode.to_region(:city => true)
+        weather.state = zipcode.to_region(:state => true)
       end
 
       if data != nil
