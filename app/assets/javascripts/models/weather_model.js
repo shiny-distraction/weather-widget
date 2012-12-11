@@ -5,6 +5,8 @@ $(function() {
 
     var WeatherModel = Backbone.Model.extend({
         defaults: {
+            city: null,
+            state: null,
             current_temp_f: 0,
             wind_speed: 0
         }
