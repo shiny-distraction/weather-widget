@@ -6,4 +6,6 @@ WeatherWidget::Application.routes.draw do
   match 'weathers/:id' => 'weather#show'
 
   match 'weathers' => 'weather#index'
+
+  root :to => 'weather#index'
 end

@@ -1,0 +1,19 @@
+@import "bootstrap";
+@import "_bootstrap-responsive.scss";
+
+body {
+  font-family: "Arial","Helvetica",sans-serif;
+  padding: 60px;
+  background-color: #DFDFDF;
+}
+
+.weather {
+  text-align: center;
+  .city_state {
+    font-size: larger;
+  }
+
+  .refresh_button {
+    padding-top: 5px;
+  }
+}

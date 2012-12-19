@@ -1,7 +1,8 @@
-<div class="weather">
-  city: <%- city %>
-  state: <%- state %>
-  temp: <%- current_temp_f %>
-  wind speed: <%- wind_speed %>
-  <button class='refresh'>refresh</button>
+<div class="weather span2 well">
+  <span class="city_state"><%- city %>, <%- state %></span>
+  <div class="temperature"><%- current_temp_f %>&deg;F</div>
+  <div class="wind">wind speed: <%- wind_speed %></div>
+  <div class="refresh_button">
+    <button class="btn btn-inverse refresh">refresh</button>
+  </div>
 </div>
