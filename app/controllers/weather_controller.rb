@@ -2,6 +2,7 @@ require 'open-uri'
 require 'area'
 
 class WeatherController < ApplicationController
+  before_filter :check_if_mock
   respond_to :json
 
   def index
@@ -10,8 +11,12 @@ class WeatherController < ApplicationController
     [ ['TX', 'Austin'],
       ['CA', 'San Francisco'],
       ['IL', 'Chicago'],
-      ['NY', 'New York'] ].each do |value| 
-      @weathers << get_weather_for(*value)
+      ['NY', 'New York'] ].each do |value|
+      if @is_mock
+        @weathers << get_mock_weather_for(*value)
+      else
+        @weathers << get_weather_for(*value)
+      end
     end
 
     respond_to do |format|
@@ -21,7 +26,11 @@ class WeatherController < ApplicationController
   end
 
   def show
-    @weather = get_weather_for(params[:id])
+    if @is_mock
+      @weather = get_mock_weather_for(params[:id])
+    else
+      @weather = get_weather_for(params[:id])
+    end
     respond_to do |format|
       format.json { render json: @weather }
     end
@@ -67,7 +76,7 @@ class WeatherController < ApplicationController
         weather.city = city
         weather.id = "#{city}, #{state}".to_zip.first
       elsif args.length == 1
-        zipcode, = *args
+        zipcode = *args
         data = w_api.conditions_for(zipcode)
         weather.id = zipcode
         weather.city = zipcode.to_region(:city => true)
@@ -83,5 +92,32 @@ class WeatherController < ApplicationController
       end
 
       weather
+    end
+
+    def get_mock_weather_for(*args)
+      weather = Weather.new
+      if args.length == 2
+        state, city = *args
+        weather.state = state
+        weather.city = city
+        weather.id = "#{city}, #{state}".to_zip.first
+      elsif args.length == 1
+        zipcode = *args
+        weather.id = zipcode
+        weather.city = zipcode.to_region(:city => true)
+        weather.state = zipcode.to_region(:state => true)
+      end
+
+      # mock weather information
+      weather.current_temp_f = rand(120) + (rand(2) == 0 ? rand().round(1) : 0)
+      weather.wind_speed = rand(30) + (rand(2) == 0 ? rand().round(1) : 0)
+
+      return weather
+    end
+
+    def check_if_mock
+      if ENV['MOCK_WEATHER']
+        @is_mock = true
+      end
     end
 end
