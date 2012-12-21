@@ -19,3 +19,6 @@ doc/
 *~
 *.swp
 .idea
+
+# Ignore my environment setup file
+.env
