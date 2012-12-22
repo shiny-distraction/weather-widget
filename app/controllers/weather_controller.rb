@@ -102,7 +102,7 @@ class WeatherController < ApplicationController
         weather.city = city
         weather.id = "#{city}, #{state}".to_zip.first
       elsif args.length == 1
-        zipcode = *args
+        zipcode = args.first
         weather.id = zipcode
         weather.city = zipcode.to_region(:city => true)
         weather.state = zipcode.to_region(:state => true)
