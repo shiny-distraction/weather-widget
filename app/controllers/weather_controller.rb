@@ -8,14 +8,13 @@ class WeatherController < ApplicationController
   def index
     @weathers = []
 
-    [ ['TX', 'Austin'],
-      ['CA', 'San Francisco'],
-      ['IL', 'Chicago'],
-      ['NY', 'New York'] ].each do |value|
+    places = WeatherPlace.all
+
+    places.each do |p|
       if @is_mock
-        @weathers << get_mock_weather_for(*value)
+        @weathers << get_mock_weather_for(p)
       else
-        @weathers << get_weather_for(*value)
+        @weathers << get_weather_for(p)
       end
     end
 
@@ -64,21 +63,19 @@ class WeatherController < ApplicationController
       end
     end
 
-    def get_weather_for(*args)
+    def get_weather_for(p)
       w_api = Wunderground.new(ENV['WUNDERGROUND_API_KEY'])
       data = nil
 
       weather = Weather.new
-      if args.length == 2
-        state, city = *args
-        data = w_api.conditions_for(URI::encode(state), URI::encode(city))
-        weather.state = state
-        weather.city = city
-        weather.id = "#{city}, #{state}".to_zip.first
-      elsif args.length == 1
-        zipcode = *args
-        data = w_api.conditions_for(zipcode)
-        weather.id = zipcode
+      if p.state && p.city
+        data = w_api.conditions_for(URI::encode(p.state), URI::encode(p.city))
+        weather.state = p.state
+        weather.city = p.city
+        weather.id = "#{p.city}, #{p.state}".to_zip.first
+      elsif p.zipcode
+        data = w_api.conditions_for(p.zipcode)
+        weather.id = p.zipcode
         weather.city = zipcode.to_region(:city => true)
         weather.state = zipcode.to_region(:state => true)
       end
@@ -94,15 +91,14 @@ class WeatherController < ApplicationController
       weather
     end
 
-    def get_mock_weather_for(*args)
+    def get_mock_weather_for(p)
       weather = Weather.new
-      if args.length == 2
-        state, city = *args
-        weather.state = state
-        weather.city = city
-        weather.id = "#{city}, #{state}".to_zip.first
-      elsif args.length == 1
-        zipcode = args.first
+      if p.state && p.city
+        weather.state = p.state
+        weather.city = p.city
+        weather.id = "#{p.city}, #{p.state}".to_zip.first
+      elsif p.zipcode
+        zipcode = p.zipcode
         weather.id = zipcode
         weather.city = zipcode.to_region(:city => true)
         weather.state = zipcode.to_region(:state => true)
