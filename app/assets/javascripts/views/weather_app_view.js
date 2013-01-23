@@ -39,6 +39,10 @@ $(function( $ ) {
             // end horrible hack!
             $('.weather-form').append(this.form.render().el);
             $('#myModal').modal();
+            // focus the first input
+            $('#myModal').on('shown', function () {
+                $('input:first').focus(); 
+            });
         },
 
         addWeather: function() {
