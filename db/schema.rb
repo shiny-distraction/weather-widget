@@ -11,6 +11,28 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 0) do
+ActiveRecord::Schema.define(:version => 20130123011737) do
+
+  create_table "weather_places", :force => true do |t|
+    t.string   "state"
+    t.string   "city"
+    t.string   "country"
+    t.integer  "zipcode"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "weathers", :force => true do |t|
+    t.string   "city",           :null => false
+    t.string   "state",          :null => false
+    t.string   "zipcode",        :null => false
+    t.string   "current_temp_f", :null => false
+    t.string   "wind_speed",     :null => false
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+  end
+
+  add_index "weathers", ["city", "state"], :name => "index_weathers_on_city_and_state", :unique => true
+  add_index "weathers", ["zipcode"], :name => "index_weathers_on_zipcode", :unique => true
 
 end
