@@ -14,7 +14,8 @@ $(function( $ ) {
         template: JST["templates/weather"],
 
         events: {
-            'click .refresh': 'refreshWeather'
+            'click .refresh': 'refreshWeather',
+            'click .remove': 'removeWeather'
         },
 
         initialize: function() {
@@ -31,6 +32,10 @@ $(function( $ ) {
 
         refreshWeather: function() {
             this.model.fetch();
+        },
+
+        removeWeather: function() {
+            this.model.destroy();
         }
 
     });

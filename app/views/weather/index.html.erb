@@ -1,5 +1,22 @@
 <div id="weatherapp">
+  <div id="controls">
+  	<button class="btn show_weather_modal">Add Location</button>    
+  	<button class="btn refresh_all">Refresh all Locations</button>
+  </div>
   <div id="weathers"></div>
+
+  <div id="myModal" class="modal hide fade">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      <h3>Add Location</h3>
+    </div>
+    <div class="weather-form">
+    </div>
+    <div class="modal-footer">
+      <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+      <button class="btn btn-inverse add_weather" data-dismiss="modal" aria-hidden="true">Save changes</button>
+    </div>
+  </div>
 </div>
 
 <script type="text/javascript">

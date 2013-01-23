@@ -13,10 +13,12 @@
 //= require jquery
 //= require jquery_ujs
 //= require jquery-ui
+//= require bootstrap
 //= require underscore
 //= require backbone
 //= require backbone_rails_sync
 //= require backbone_datalink
+//= require backbone-forms-bootstrap
 //= require_tree ./models
 //= require_tree ./templates
 //= require_tree ./views

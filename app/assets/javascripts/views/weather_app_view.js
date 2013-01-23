@@ -7,6 +7,12 @@ $(function( $ ) {
 
         el: '#weatherapp',
 
+        events: {
+            'click .show_weather_modal': 'showWeatherModal',
+            'click .add_weather': 'addWeather',
+            'click .refresh_all': 'refreshAll'
+        },
+
         initialize: function() {
             app.weathers.on( 'change', this.render, this );
             app.weathers.on( 'add', this.addOne, this );
@@ -21,6 +27,28 @@ $(function( $ ) {
         },
 
         render: function() {
+        },
+
+        showWeatherModal: function() {
+            var weatherModel = new app.WeatherModel();
+            app.form = new Backbone.Form({
+                model: weatherModel
+            });
+            // horrible hack! probably shouldn't append here, but for now it's awesome!
+            $('.weather-form').empty();
+            // end horrible hack!
+            $('.weather-form').append(app.form.render().el);
+            $('#myModal').modal();
+        },
+
+        addWeather: function() {
+            app.form.commit();
+            app.weathers.add(app.form.model);
+            app.form.model.save();
+        },
+
+        refreshAll: function() {
+            app.weathers.fetch();
         },
 
         addOne: function(weather) {
