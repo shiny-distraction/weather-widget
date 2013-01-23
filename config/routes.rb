@@ -9,5 +9,5 @@ WeatherWidget::Application.routes.draw do
 
   match 'weathers' => 'weather#index'
 
-  root :to => 'weather#index'
+  root :to => 'weather_places#index'
 end

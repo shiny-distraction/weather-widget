@@ -21,6 +21,7 @@ $(function( $ ) {
         initialize: function() {
             this.model.on( 'change', this.render, this );
             this.model.on( 'add', this.render, this );
+            this.model.on( 'destroy', this.remove, this );
         },
 
         render: function() {

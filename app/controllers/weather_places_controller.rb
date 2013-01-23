@@ -13,6 +13,7 @@ class WeatherPlacesController < ApplicationController
     end
 
     respond_to do |format|
+      format.html # index.html.erb
       format.json { render json: @weather_places, methods: [:current_temp_f, :wind_speed] }
     end
   end

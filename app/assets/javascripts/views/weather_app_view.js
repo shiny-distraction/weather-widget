@@ -31,20 +31,23 @@ $(function( $ ) {
 
         showWeatherModal: function() {
             var weatherModel = new app.WeatherModel();
-            app.form = new Backbone.Form({
+            this.form = new Backbone.Form({
                 model: weatherModel
             });
             // horrible hack! probably shouldn't append here, but for now it's awesome!
             $('.weather-form').empty();
             // end horrible hack!
-            $('.weather-form').append(app.form.render().el);
+            $('.weather-form').append(this.form.render().el);
             $('#myModal').modal();
         },
 
         addWeather: function() {
-            app.form.commit();
-            app.weathers.add(app.form.model);
-            app.form.model.save();
+            // this binds the input to the model (held in the form)
+            this.form.commit();
+            // this saves the model data to the backend
+            this.form.model.save();
+            // and finally, add the new model to our collection, which will add a new view
+            app.weathers.add(this.form.model);
         },
 
         refreshAll: function() {

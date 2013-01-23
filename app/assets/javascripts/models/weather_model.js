@@ -21,7 +21,7 @@ $(function() {
 
     app.WeatherCollection = Backbone.Collection.extend({
         model: app.WeatherModel,
-        url: '/weathers'
+        urlRoot: '/weather_places'
     });
 
 });
