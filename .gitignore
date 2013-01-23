@@ -22,3 +22,5 @@ doc/
 
 # Ignore my environment setup file
 .env
+
+.rvmrc
