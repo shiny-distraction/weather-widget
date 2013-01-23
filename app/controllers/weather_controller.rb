@@ -25,10 +25,13 @@ class WeatherController < ApplicationController
   end
 
   def show
+    p = WeatherPlace.new
+    p.zipcode = params[:id]
+
     if @is_mock
-      @weather = get_mock_weather_for(params[:id])
+      @weather = get_mock_weather_for(p)
     else
-      @weather = get_weather_for(params[:id])
+      @weather = get_weather_for(p)
     end
     respond_to do |format|
       format.json { render json: @weather }
@@ -37,20 +40,21 @@ class WeatherController < ApplicationController
 
   def forecast
     w_api = setup_call
-    data = w_api.forecast_for(@state, @city)
+    data = w_api.forecast_for(@place)
     respond(data, 'forecast')
   end
 
   def conditions
     w_api = setup_call
-    data = w_api.conditions_for(@state, @city)
+    data = w_api.conditions_for(@place)
     respond(data, 'current_observation')
   end
 
   protected
     def setup_call
-      @state = URI::encode(params[:state])
-      @city = URI::encode(params[:city])
+      @place = WeatherPlace.new
+      @place.state = URI::encode(params[:state])
+      @place.city = URI::encode(params[:city])
       @query_param = params[:q]
       Wunderground.new(ENV['WUNDERGROUND_API_KEY'])
     end
@@ -76,8 +80,8 @@ class WeatherController < ApplicationController
       elsif p.zipcode
         data = w_api.conditions_for(p.zipcode)
         weather.id = p.zipcode
-        weather.city = zipcode.to_region(:city => true)
-        weather.state = zipcode.to_region(:state => true)
+        weather.city = p.zipcode.to_region(:city => true)
+        weather.state = p.zipcode.to_region(:state => true)
       end
 
       if data != nil
@@ -99,9 +103,9 @@ class WeatherController < ApplicationController
         weather.id = "#{p.city}, #{p.state}".to_zip.first
       elsif p.zipcode
         zipcode = p.zipcode
-        weather.id = zipcode
-        weather.city = zipcode.to_region(:city => true)
-        weather.state = zipcode.to_region(:state => true)
+        weather.id = p.zipcode
+        weather.city = p.zipcode.to_region(:city => true)
+        weather.state = p.zipcode.to_region(:state => true)
       end
 
       # mock weather information
